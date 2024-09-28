@@ -15,7 +15,16 @@ meta.reflect(bind=engine)
 # Truncate all tables
 with session.begin():
     for table in meta.sorted_tables:
-        session.execute(table.delete())
+        print(f"Table: {table.name}")
+        
+        # Select all rows from the table
+        select_stmt = table.select()
+        result = session.execute(select_stmt)
+
+        # Print out each row
+        for row in result:
+            print(row)
+        #session.execute(table.delete())
 
 session.commit()
 

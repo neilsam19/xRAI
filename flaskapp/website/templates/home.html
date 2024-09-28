@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %} {% if user.isdoctor == "Yes" %}
-<h1 align="center">Welcome Dr. {{user.first_name}}</h1>
+<h1 align="center" class="pageTitle">Welcome Dr. {{user.first_name}}</h1>
+<!-- <h2 align="center">Your user id is: {{user.id}}</h2> -->
 <hr style="border-width: 2px" />
 <p>Upload x-ray images:</p>
 <form
@@ -43,22 +44,63 @@
   <select name="getChoice" id="getChoice">
     <option value="boneAge">Bone Age</option>
     <option value="fracture">Fracture Detection</option>
+    <option value="pneumonia">Pneumonia Detection</option>
+    <option value="cancer">Cancer Detection</option>
   </select>
   <input type="submit" value="Submit" />
 </form>
-
-{% if boneoutput_text %}
-<h2 align="center">Scan Output:</h2>
-<p align="center">Your bone age is: {{ boneoutput_text }} months</p>
-{% endif %} {% if fractureoutput_text %}
+<br />
+<br />
+<br />
+<h2>Doctor's Scan Records</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Patient Name</th>
+      <th>Patient Email</th>
+      <th>Scan Name</th>
+      <th>Scan Date and Time</th>
+      <th>Scan Results</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if scan_data %} {% for scan in scan_data %}
+    <tr>
+      <td>{{ scan.patient_name }}</td>
+      <td>{{ scan.patient_email }}</td>
+      <td>{{ scan.scan_name }}</td>
+      <td>{{ scan.scan_datetime }}</td>
+      <td>{{ scan.scan_result }}</td>
+    </tr>
+    {% endfor %} {% else %}
+    <tr>
+      <td colspan="5">
+        No scans available or scan in progress. Please click on the Home page.
+      </td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+{% if boneoutput_months %}
 <h2 align="center">Scan Output:</h2>
 <p align="center">
-  Here is information on your fracture scan: {{fractureoutput_text}}
+  Your bone age is: {{ boneoutput_months }} months (also {{ boneoutput_years}}
+  years)
 </p>
+{% endif %} {% if fractureoutput_text %}
+<h2 align="center">Scan Output:</h2>
+<p align="center">Here is information on your fracture scan:</p>
+<p align="center">{{fractureoutput_text}}</p>
+{% endif %} {% if pneumoniaoutputtext %}
+<h2 align="center">Scan Output:</h2>
+<p align="center">{{pneumoniaoutputtext}}</p>
+{% endif %} {% if canceroutputtext %}
+<h2 align="center">Scan Output:</h2>
+<p align="center">{{canceroutputtext}}</p>
 {% endif %}
 
 <br />
-<label for="emailForm">Email the patient:</label>
+<label for="emailForm">Email the patient the results of the latest scan:</label>
 <form name="emailForm" action="" method="post">
   <input type="hidden" name="form_name" value="emailForm" />
   <!-- Hidden field for form identification -->
@@ -75,12 +117,12 @@
 </form>
 {% if user_details %}
 <p align="center">
-  The name of the user with this email is: {{ user_details.first_name }} {% if
-  user_details.isdoctor == "Yes" %} This user is a doctor. {% else %} This user
-  is a patient. {% endif %}
+  The name of the user with this email is: {{ user_details.first_name }}. The
+  scan results have been sent.
 </p>
+
 {% endif %} {% else %}
-<h1 align="center">Welcome {{user.first_name}}</h1>
+<h1 align="center" class="pageTitle">Welcome {{user.first_name}}</h1>
 <hr style="border-width: 2px" />
 <h2 align="center">Educational Videos:</h2>
 <div
@@ -115,7 +157,7 @@
       </div>
     </div>
     <div class="carousel-item">
-      <h4 style="display: block; text-align: center">Pnemonia Overview:</h4>
+      <h4 style="display: block; text-align: center">Pneumonia Overview:</h4>
       <div style="display: flex; align-items: center; justify-content: center">
         <iframe
           width="560"

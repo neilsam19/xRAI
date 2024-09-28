@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block title %}Contact Us{% endblock %} {% block content %} 
+
+{% if user.isdoctor == "Yes" %}
+    <h1 align="center" class="pageTitle">Welcome Dr. {{user.first_name}}</h1>
+    <hr style="border-width: 2px;" />
+{% else %}
+    <h1 align="center">Welcome {{user.first_name}}</h1>
+    <hr style="border-width: 2px;" />
+{% endif %}
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+    {% for currUser in all_users %} 
+        {% if currUser.isdoctor == "Yes" %} 
+            <figure style="margin: 10px;">
+                <img src="{{url_for('static', filename='../static/images/doctorIcon.png')}}" alt="Doctor Icon" style="display: block; margin: 0 auto; width: 300px; height: 300px;">
+                <figcaption style="text-align: center;">
+                    Dr. {{ currUser.first_name }}
+                    <br />
+                    {{ currUser.email }}
+                </figcaption>
+            </figure>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{% endblock %}
