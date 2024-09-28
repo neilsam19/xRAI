@@ -20,10 +20,10 @@
 </form>
 
 {% if image_filename %}
-<h2 align="center">Image:</h2>
+<h2 align="center">Uploaded Image:</h2>
 <img
   src="{{ url_for('static', filename='images/' ~ image_filename) }}"
-  alt="Image: "
+  alt="Uploaded Image"
   style="
     display: block;
     margin-left: auto;
@@ -58,75 +58,69 @@
 </p>
 {% endif %} {% else %}
 <h1 align="center">Welcome {{user.first_name}}</h1>
-<hr style="border-width: 2px" />
-<h2 align="center">Educational Videos:</h2>
-<div style="display: flex; flex-wrap: wrap; justify-content: center">
-  <iframe
-    width="300"
-    height="200"
-    src="https://www.youtube.com/embed/7V4Xyfz3SjY"
-    frameborder="0"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
-  <iframe
-    width="300"
-    height="200"
-    src="https://www.youtube.com/embed/4iGxWvzYn4w"
-    frameborder="0"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
-  <iframe
-    width="300"
-    height="200"
-    src="https://www.youtube.com/embed/CdV7uAa7qHw"
-    frameborder="0"
-    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen
-  ></iframe>
-</div>
-<hr style="border-width: 2px" />
-<h2 align="center">Frequently Asked Questions</h2>
-<ul style="list-style-type: none; list-style-position: outside">
-  <li style="padding-bottom: 10px">
-    <strong>Will X-rays hurt?</strong>
-    <p>
-      No, X-rays will not hurt. They are a painless and non-invasive procedure.
-    </p>
-  </li>
-  <li style="padding-bottom: 10px">
-    <strong>How long does it take?</strong>
-    <p>The whole process usually takes about 10-15 minutes per body part.</p>
-  </li>
-  <li style="padding-bottom: 10px">
-    <strong>What are the risks?</strong>
-    <p>
-      Risks are very low. There is a very small chance of an allergic reaction
-      to the X-ray dye.
-    </p>
-  </li>
-  <li style="padding-bottom: 10px">
-    <strong>Do I need to prepare for an X-ray?</strong>
-    <p>
-      You will need to remove any clothing or jewelry that may interfere with
-      the X-ray.
-    </p>
-  </li>
-  <li style="padding-bottom: 10px">
-    <strong>How long will it take to get the results?</strong>
-    <p>
-      The radiologist will look at the X-ray and give the results to your
-      doctor. Your doctor will then tell you the results.
-    </p>
-  </li>
-  <li style="padding-bottom: 10px">
-    <strong>Can I get a copy of my X-ray?</strong>
-    <p>
-      You can get a copy of your X-ray from your doctor or the hospital where
-      you got the X-ray.
-    </p>
-  </li>
-</ul>
-
-{% endif %} {% endblock %}
+  <hr style="border-width: 2px;" />
+  <h2 align="center">Educational Videos: </h2>
+  <div style="margin-top: 15px;" id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <h4 style="display: block; text-align: center;">Bone Age Overview:</h4>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/ZRTXjdrl2dY?si=CH--ukHSSBFPFtfA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <h4 style="display: block; text-align: center;">Pnemonia Overview:</h4>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/K_r-kMJjh8Y?si=qN8fjFHtR5FkxmEl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <h4 style="display: block; text-align: center;">Fractures Exercises:</h4>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/b8L9GRLHvws?si=alUoh5wy4p5IRjVj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  <hr style="border-width: 2px;" />
+  <h2 align="center">Frequently Asked Questions </h2>
+  <ul style="list-style-type: none; list-style-position: outside;">
+    <li style="padding-bottom: 10px;">
+      <strong>Will X-rays hurt?</strong>
+      <p>No, X-rays will not hurt. They are a painless and non-invasive procedure.</p>
+    </li>
+    <li style="padding-bottom: 10px;">
+      <strong>How long does it take?</strong>
+      <p>The whole process usually takes about 10-15 minutes per body part.</p>
+    </li>
+    <li style="padding-bottom: 10px;">
+      <strong>What are the risks?</strong>
+      <p>Risks are very low. There is a very small chance of an allergic reaction to the X-ray dye.</p>
+    </li>
+    <li style="padding-bottom: 10px;">
+      <strong>Do I need to prepare for an X-ray?</strong>
+      <p>You will need to remove any clothing or jewelry that may interfere with the X-ray.</p>
+    </li>
+    <li style="padding-bottom: 10px;">
+      <strong>How long will it take to get the results?</strong>
+      <p>The radiologist will look at the X-ray and give the results to your doctor. Your doctor will then tell you the results.</p>
+    </li>
+    <li style="padding-bottom: 10px;">
+      <strong>Can I get a copy of my X-ray?</strong>
+      <p>You can get a copy of your X-ray from your doctor or the hospital where you got the X-ray.</p>
+    </li>
+  </ul>
+  {% endif %} {% endblock %}
