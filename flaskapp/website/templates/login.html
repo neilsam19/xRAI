@@ -1,7 +1,32 @@
 {% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
 %}
+<div
+  style="
+    background-color: black;
+    height: 91vh;
+    width: 100vw;
+    display: block;
+    position: relative;
+    left: -7vw;
+  "
+>
+  <h1 class="pageBannerTitle">Welcome to xRAI</h1>
+
+  <p class="pageBannerText1">
+    An estimated <b style="color: red">250,000 people</b> die each year in the
+    United States due to medical errors. This makes medical errors the third
+    leading cause of death after heart disease and cancer.
+  </p>
+
+  <p class="pageBannerText2">
+    Our mission at xRAI is to help mitigate these numbers. We will use AI models
+    to help doctors analyze patient's risk of pnemonia, identify hard to see
+    fractures, and find children's bone age based on the patient's x-ray.
+  </p>
+</div>
+
 <form method="POST">
-  <h3 align="center">Login</h3>
+  <h3 align="center" class="pageTitle">Login</h3>
   <div class="form-group">
     <label for="email">Email Address</label>
     <input
