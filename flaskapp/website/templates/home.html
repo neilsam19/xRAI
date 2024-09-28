@@ -100,7 +100,9 @@
 {% endif %}
 
 <br />
-<label for="emailForm">Email the patient the results of the latest scan:</label>
+<label for="emailForm"
+  >Email your patient the results of the latest scan:</label
+>
 <form name="emailForm" action="" method="post">
   <input type="hidden" name="form_name" value="emailForm" />
   <!-- Hidden field for form identification -->
@@ -117,8 +119,9 @@
 </form>
 {% if user_details %}
 <p align="center">
-  The name of the user with this email is: {{ user_details.first_name }}. The
-  scan results have been sent.
+  The name of the patient with this email is: {{ user_details.first_name }}.
+  Please verify that this is indeed correct. The scan results have been sent to
+  this patient.
 </p>
 
 {% endif %} {% else %}
