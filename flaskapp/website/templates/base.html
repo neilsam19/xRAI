@@ -14,7 +14,10 @@
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
 
     <title>{% block title %}Home{% endblock %}</title>
   </head>
@@ -30,11 +33,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav navVertCenter">
-          <img src="{{ url_for('static', filename='images/xraiLogo.png') }}" alt="Logo" style="height: 70px; position: relative; top: 5px; left: 20px;">
+          <img
+            src="{{ url_for('static', filename='images/xraiLogo.png') }}"
+            alt="Logo"
+            style="height: 70px; position: relative; top: 5px; left: 20px"
+          />
           <div class="ubuntu-links">
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" id="home" href="/">Home</a>
-            <a class="nav-item nav-link" id="contact-us" href="/contact-us">Contact Us</a>
+            <a class="nav-item nav-link" id="contact-us" href="/contact-us"
+              >Contact Us</a
+            >
             <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
             {% else %}
             <a class="nav-item nav-link" id="login" href="/login">Login</a>
@@ -94,18 +103,29 @@
     {% endblock %}
 
     <div class="footer">
-      <hr style="border-width: 2px">
+      <hr style="border-width: 2px" />
       <div class="d-flex justify-content-end">
         {% if user.is_authenticated %}
         <div class="d-flex flex-column">
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="contact-us" href="/contact-us">Contact Us</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <a class="nav-item nav-link link-text" id="home" href="/">Home</a>
+          <a
+            class="nav-item nav-link link-text"
+            id="contact-us"
+            href="/contact-us"
+            >Contact Us</a
+          >
+          <a class="nav-item nav-link link-text" id="logout" href="/logout"
+            >Logout</a
+          >
         </div>
         {% else %}
         <div class="d-flex flex-column">
-          <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          <a class="nav-item nav-link link-text" id="login" href="/login"
+            >Login</a
+          >
+          <a class="nav-item nav-link link-text" id="signUp" href="/sign-up"
+            >Sign Up</a
+          >
         </div>
         {% endif %}
       </div>

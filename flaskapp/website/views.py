@@ -32,6 +32,16 @@ def home():
                 'scan_result': scan.scan_result,
                 'scan_datetime': scan.date_of_scan.strftime('%Y-%m-%d %H:%M:%S')  # Format datetime
             })
+    elif current_user.isdoctor == 'No':
+        patient_scans = db.session.query(Scan, User).filter(Scan.patientuser_id == current_user.id).join(User, Scan.doctoruser_id == User.id).order_by(desc(Scan.date_of_scan)).all()
+        for scan, doctor in patient_scans:
+            scan_data.append({
+                'doctor_name': doctor.first_name,
+                'doctor_email': doctor.email,
+                'scan_name': scan.scan_name,
+                'scan_result': scan.scan_result,
+                'scan_datetime': scan.date_of_scan.strftime('%Y-%m-%d %H:%M:%S')
+            })
     if request.method == 'POST':
         if current_user.isdoctor == 'Yes':
             doctor_scans = db.session.query(Scan, User).filter(Scan.doctoruser_id == current_user.id).join(User, Scan.patientuser_id == User.id).order_by(desc(Scan.date_of_scan)).all()

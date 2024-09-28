@@ -210,6 +210,37 @@
   </a>
 </div>
 <hr style="border-width: 2px" />
+<h2>Your Doctors' Scans</h2>
+{% if scan_data|length == 0 %}
+<p>No doctor has uploaded any scans for you.</p>
+{% else %}
+<table border="1">
+  <thead>
+    <tr>
+      <th>Doctor Name</th>
+      <th>Doctor Email</th>
+      <th>Scan Name</th>
+      <th>Scan Result</th>
+      <th>Scan Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for scan in scan_data %}
+    <tr>
+      <td>{{ scan.doctor_name }}</td>
+      <td>{{ scan.doctor_email }}</td>
+      <td>{{ scan.scan_name }}</td>
+      <td>{{ scan.scan_result }}</td>
+      <td>{{ scan.scan_datetime }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+<br />
+<br />
+<hr style="border-width: 2px" />
+
 <h2 align="center">Frequently Asked Questions</h2>
 <ul style="list-style-type: none; list-style-position: outside">
   <li style="padding-bottom: 10px">

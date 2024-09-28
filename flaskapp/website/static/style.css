@@ -126,7 +126,7 @@ a {
 
 .pageBannerText2 {
   color: white;
-  font-size: 2em;
+  font-size: 1.8em;
   width: 70%;
   position: relative;
   left: 200%;
@@ -156,4 +156,12 @@ body {
   display: flex;
   align-items: center;
   margin-top: 200px;
+}
+
+.link-text {
+  color: #808080;
+}
+
+.link-text:hover {
+  color: #bfbfbf;
 }
