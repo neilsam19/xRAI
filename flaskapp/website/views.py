@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, session
 from flask_login import login_required, current_user
 from .models import Note
 from .models import User
@@ -24,7 +24,7 @@ def home():
                     image_path = f'website/static/images/{image.filename}'
                     image.save(image_path)
                     image_filename = image.filename  # Store the filename
-                    subprocess.run(['python', 'website/image_processing.py', image_path])
+                    session['image_filename'] = image_filename
                     return render_template("home.html", user=current_user, image_filename=image_filename)
         elif form_name == 'emailForm': 
             #temporary content 
@@ -46,6 +46,39 @@ def home():
                 return render_template("home.html", user=current_user, user_details=user)
             else:
                 flash('No user with that email exists.', category='error')
+        elif form_name == 'getChoice': 
+            selected_scan = request.form.get('getChoice')
+            if selected_scan == 'boneAge':
+                if session.get('image_filename'):
+                    # Run the baa_predictor.py script with the image path
+                    try:
+                        image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
+                        script_path = os.path.join('models', 'baa_predictor.py')
+                        output = subprocess.check_output(['python', script_path, image_path])
+                        output = output.decode('utf-8').strip().strip("'")
+                        flash('Bone Age scan completed successfully!', 'success')
+                        session.pop('image_filename', None)
+                        return render_template("home.html", user=current_user, boneoutput_text=output)
+                    except subprocess.CalledProcessError as e:
+                        flash(f'Error running Bone Age scan: {e}', 'danger')
+                else:
+                    flash('No image uploaded for Bone Age scan.', 'danger')
+            elif selected_scan == 'fracture':
+                # Handle Fracture Detection scan logic here
+                if session.get('image_filename'):
+                    # Run the fracture_predictor.py script with the image path
+                    try:
+                        image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
+                        script_path = os.path.join('models', 'fracture_predictor.py')
+                        output = subprocess.check_output(['python', script_path, image_path])
+                        output = output.decode('utf-8').strip().strip("'")
+                        flash('Fracture Prediction scan completed successfully!', 'success')
+                        session.pop('image_filename', None)
+                        return render_template("home.html", user=current_user, fractureoutput_text=output)
+                    except subprocess.CalledProcessError as e:
+                        flash(f'Error running Fracture Prediction scan: {e}', 'danger')
+                else:
+                    flash('No image uploaded for Fracture Prediction scan.', 'danger')
     return render_template("home.html", user=current_user)
 
 

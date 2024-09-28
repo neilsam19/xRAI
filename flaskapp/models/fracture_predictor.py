@@ -37,7 +37,7 @@ def post_process(output, score_threshold=0.6):
     return img_features
 
 
-MODEL_PATH = "./yolov7-p6-bonefracture.onnx"
+MODEL_PATH = "models/yolov7-p6-bonefracture.onnx"
 
 def fracture_predictor(img_path):
     img = load_img(img_path)

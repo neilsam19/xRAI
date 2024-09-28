@@ -6,11 +6,11 @@ from skimage.transform import resize
 from skimage.io import imread, imshow
 
 # load svr
-with open('baa_model.pkl', 'rb') as f:
+with open('models/baa_model.pkl', 'rb') as f:
     svr = pickle.load(f)
 
 # create segmentor
-MODEL_PATH = "FINAL_UNET_MODEL.h5"
+MODEL_PATH = "models/FINAL_UNET_MODEL.h5"
 inputs = keras.layers.Input( (256, 256, 1) )
 s = keras.layers.Lambda(lambda x: x / 255.)(inputs)
 
