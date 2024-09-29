@@ -520,32 +520,95 @@
 </div>
 <hr style="border-width: 2px" />
 <h2>Your Doctors' Scans</h2>
-{% if scan_data|length == 0 %}
-<p>No doctor has uploaded any scans for you.</p>
-{% else %}
-<table border="1">
+<table
+  style="
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    border: 0.5px solid rgb(238, 7, 7);
+  "
+>
   <thead>
-    <tr>
-      <th>Doctor Name</th>
-      <th>Doctor Email</th>
-      <th>Scan Name</th>
-      <th>Scan Result</th>
-      <th>Scan Date</th>
+    <tr style="background-color: rgb(249, 249, 249)">
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Doctor Name
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Doctor Email
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Name
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Result
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Date
+      </th>
     </tr>
   </thead>
   <tbody>
-    {% for scan in scan_data %}
+    {% if scan_data %} {% for scan in scan_data %}
     <tr>
-      <td>{{ scan.doctor_name }}</td>
-      <td>{{ scan.doctor_email }}</td>
-      <td>{{ scan.scan_name }}</td>
-      <td>{{ scan.scan_result }}</td>
-      <td>{{ scan.scan_datetime }}</td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.doctor_name }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.doctor_email }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_name }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_result }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_datetime }}
+      </td>
     </tr>
-    {% endfor %}
+    {% endfor %} {% else %}
+    <tr>
+      <td
+        colspan="5"
+        style="padding: 20px; text-align: center; color: rgb(150, 150, 150)"
+      >
+        No scans available or scan in progress. Please click on the Home page.
+      </td>
+    </tr>
+    {% endif %}
   </tbody>
 </table>
-{% endif %}
+
 <br />
 <br />
 <hr style="border-width: 2px" />
