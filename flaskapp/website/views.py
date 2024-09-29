@@ -13,6 +13,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime
 from sqlalchemy import desc
+from dotenv import load_dotenv, dotenv_values 
+
+load_dotenv() 
 
 views = Blueprint('views', __name__)
 
@@ -54,6 +57,7 @@ def home():
                     'scan_result': scan.scan_result,
                     'scan_datetime': scan.date_of_scan.strftime('%Y-%m-%d %H:%M:%S')  # Format datetime
                 })
+                
         form_name = request.form.get('form_name')  # Get the form name from the hidden input
         if form_name == 'imageUploadForm':
             if current_user.isdoctor == 'Yes':
@@ -63,30 +67,26 @@ def home():
                     image.save(image_path)
                     image_filename = image.filename  # Store the filename
                     session['image_filename'] = image_filename
-                    return render_template("home.html", user=current_user, image_filename=image_filename)
-        elif form_name == 'getChoice': 
-            selected_scan = request.form.get('getChoice')
-            if selected_scan == 'boneAge':
-                if session.get('image_filename'):
-                    # Run the baa_predictor.py script with the image path
+                    return render_template("home.html", user=current_user, scan_data=scan_data, image_filename=image_filename)
+                
+        elif form_name == 'getScan':
+            selected_scan = request.form.get("scanType")
+            if session.get("image_filename"):
+                if selected_scan == 'boneAge':
                     try:
                         image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
                         script_path = os.path.join('models', 'baa_predictor.py')
                         output = subprocess.check_output(['python', script_path, image_path])
                         output = output.decode('utf-8').strip().strip("'")
-                        session['scan_result'] = f"The model predicts a bone age of {output} months ({round(float(output)/12, 2)} years)"
+                        session['scan_result'] = f"Bone age in months and years: { output } months, { round(float(output)/12, 2) } years"
                         session['scan_type'] = 'Bone Age'
                         flash('Bone Age scan completed successfully!', 'success')
                         session.pop('image_filename', None)
-                        return render_template("home.html", user=current_user, boneoutput_months=output, boneoutput_years = round(float(output)/12, 2))
+                        return render_template("home.html", user=current_user, scan_data=scan_data, boneoutput_months=output, boneoutput_years = round(float(output)/12, 2))
                     except subprocess.CalledProcessError as e:
                         flash(f'Error running Bone Age scan: {e}', 'danger')
-                else:
-                    flash('No image uploaded for Bone Age scan.', 'danger')
-            elif selected_scan == 'fracture':
-                # Handle Fracture Detection scan logic here
-                if session.get('image_filename'):
-                    # Run the fracture_predictor.py script with the image path
+
+                elif selected_scan == 'fracture':
                     try:
                         image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
                         script_path = os.path.join('models', 'fracture_predictor.py')
@@ -94,42 +94,36 @@ def home():
                         output = output.decode('utf-8').strip().strip("'")
                         output = ast.literal_eval(output)
                         if output:  # Check if the dictionary is not empty
-                            formatted_output = ', '.join([f"the model is {value:.1f}% confident of a {key}" for key, value in dict(output).items()])
-                            output = f"Results: {formatted_output}"
+                            formatted_output = ', '.join([f"{key} - {value:.1f}% confidence" for key, value in dict(output).items()])
+                            output = f"{formatted_output}"
                         else:
-                            output = "Nothing detected - please check for further review."
+                            output = "Nothing detected - please review."
                         session['scan_result'] = output
                         session['scan_type'] = 'Fracture Detection'
                         flash('Fracture Prediction scan completed successfully!', 'success')
                         session.pop('image_filename', None)
-                        return render_template("home.html", user=current_user, fractureoutput_text=output)
+                        return render_template("home.html", user=current_user, scan_data=scan_data, fractureoutput_text=output)
                     except subprocess.CalledProcessError as e:
                         flash(f'Error running Fracture Prediction scan: {e}', 'danger')
-                else:
-                    flash('No image uploaded for Fracture Prediction scan.', 'danger')
-            elif selected_scan == 'pneumonia':
-                # Handle Pneumonia Detection scan logic here
-                if session.get('image_filename'):
-                    # Running the pneumonia_detector.py script with the image path
+
+                elif selected_scan == 'pneumonia':
                     try:
                         image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
                         script_path = os.path.join('models', 'pneumonia_detector.py')
                         output = subprocess.check_output(['python', script_path, image_path])
                         output = output.decode('utf-8').strip()
-                        # output = output.decode('utf-8').strip().strip("'")
-                        session['scan_result'] = f"Pneumonia scan result: {output}"
+                        if output == 'Pneumonia':
+                            session['scan_result'] = "Pneumonia scan result: Positive"
+                        else:
+                            session['scan_result'] = "Pneumonia scan result: Negative"
                         session['scan_type'] = 'Pneumonia Detection'
                         flash('Pneumonia Prediction scan completed successfully!', 'success')
                         session.pop('image_filename', None)
-                        return render_template("home.html", user=current_user, pneumoniaoutputtext=output)
+                        return render_template("home.html", user=current_user, scan_data=scan_data, pneumoniaoutputtext=output)
                     except subprocess.CalledProcessError as e:
                         flash(f'Error running Pneumonia Prediction scan: {e}', 'danger')
-                else:
-                    flash('No image uploaded for Pneumonia Prediction scan.', 'danger')
-            elif selected_scan == 'cancer':
-                # Handle Cancer Detection scan logic here
-                if session.get('image_filename'):
-                    # Running the cancer_detector.py script with the image path
+
+                elif selected_scan == 'cancer':
                     try:
                         image_path = os.path.join('website', 'static', 'images', session.get('image_filename'))
                         script_path1 = os.path.join('models', 'cancer_detector.py')
@@ -141,18 +135,23 @@ def home():
                         confidence_level = float(confidence_str)
                         # Check the confidence level and reassign the output string
                         if confidence_level < 70.0:
-                            output = f"{cancer_type} (low confidence: please review.)"
+                            output = f"{cancer_type} - low confidence ({confidence_level}%), please review.)"
                         else:
-                            output = f"{cancer_type} {confidence_level}"
-                        session['scan_result'] = f"Cancer scan result: {output}"
+                            output = f"{cancer_type} - {confidence_level}% confidence"
+                        session['scan_result'] = output
                         session['scan_type'] = 'Cancer Detection'
                         flash('Cancer Prediction scan completed successfully!', 'success')
                         session.pop('image_filename', None)
-                        return render_template("home.html", user=current_user, canceroutputtext=output)
+                        return render_template("home.html", user=current_user, scan_data=scan_data, canceroutputtext=output)
                     except subprocess.CalledProcessError as e:
                         flash(f'Error running Cancer Prediction scan: {e}', 'danger')
+
                 else:
-                    flash('No image uploaded for Cancer Prediction scan.', 'danger')
+                    flash('No options selected.', 'danger')
+                
+            else:
+                flash('No image uploaded to scan.', 'danger')
+
         elif form_name == 'emailForm': 
             #temporary content 
             email_content = request.form.get('note')
@@ -178,7 +177,7 @@ def home():
                 )
                 db.session.add(new_scan_record)
                 db.session.commit()
-                email = "testingthisreallyniceemail@gmail.com"
+                email = os.getenv('EMAIL_ACCOUNT')
                 receiver_email = user.email
                 msg = MIMEMultipart()
                 msg['From'] = email
@@ -188,10 +187,10 @@ def home():
                 msg.attach(MIMEText(body, 'plain'))
                 server = smtplib.SMTP("smtp.gmail.com", 587)
                 server.starttls()
-                server.login(email, "kwzzvgstqnpcghsy")
+                server.login(email, os.getenv('GMAIL_APP_PASSWORD'))
                 server.send_message(msg)
                 flash(f'Scan results sent to {receiver_email}.', 'success')
-                return render_template("home.html", user=current_user, user_details=user)
+                return render_template("home.html", user=current_user, user_details=user, scan_data=scan_data)
             else:
                 flash('No user with that email exists.', category='error')
     return render_template("home.html", user=current_user, scan_data=scan_data)
@@ -199,4 +198,3 @@ def home():
 @views.route('/contact-us')
 def contact_us():
     return render_template('contact_us.html', user=current_user, all_users=User.query.all())
-

@@ -1,130 +1,439 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %} {% if user.isdoctor == "Yes" %}
-<h1 align="center" class="pageTitle">Welcome Dr. {{user.first_name}}</h1>
-<!-- <h2 align="center">Your user id is: {{user.id}}</h2> -->
-<hr style="border-width: 2px" />
-<p>Upload x-ray images:</p>
-<form
-  name="ImageUploadForm"
-  action=""
-  method="post"
-  enctype="multipart/form-data"
->
-  <input type="hidden" name="form_name" value="imageUploadForm" />
-  <input type="file" name="image" accept="image/*" />
-  <br />
-  <input
-    type="submit"
-    value="Upload"
-    style="display: block; margin-top: 16px"
-  />
-</form>
-
-{% if image_filename %}
-<h2 align="center">Uploaded Image:</h2>
-<img
-  src="{{ url_for('static', filename='images/' ~ image_filename) }}"
-  alt="Uploaded Image"
+<div
   style="
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100%;
-    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+    height: 10vh;
   "
-/>
-{% endif %}
-<hr style="border-width: 2px" />
+>
+  <img
+    style="width: 75px; height: 75px; margin-left: 5%"
+    src="{{ url_for('static', filename='images/doctorIcon.png') }}"
+  />
+  <h1
+    text-align="center"
+    class="pageTitle"
+    style="
+      vertical-align: middle;
+      margin-left: 25px;
+      margin-top: 0;
+      line-height: 75px;
+    "
+  >
+    Dr. {{user.first_name}}
+  </h1>
+</div>
+
+<div
+  style="
+    display: flex;
+    height: 75vh;
+    width: 100%;
+    padding: 1%;
+    margin-top: 20px;
+  "
+>
+  <div
+    style="
+      display: block;
+      width: 55%;
+      padding: 2%;
+      border: 0.5px rgb(210, 210, 210) solid;
+      border-radius: 25px;
+      background-color: rgb(249, 249, 249);
+      margin-left: 2.5%;
+      overflow-y: scroll;
+    "
+  >
+    <h2>Upload X-Ray</h2>
+    <p>Supported Formats: PNG, JPG, JPEG</p>
+
+    <form
+      style="
+        display: flex;
+        align-items: center;
+        justify-content: left;
+        margin-top: 35px;
+      "
+      name="ImageUploadForm"
+      action=""
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <input type="hidden" name="form_name" value="imageUploadForm" />
+      <input
+        type="file"
+        name="image"
+        accept="image/*"
+        style="
+          width: 100%;
+          margin-right: 5%;
+          padding: 2%;
+          background-color: white;
+          border-radius: 8px;
+          border: 1px rgb(150, 150, 150) solid;
+        "
+      />
+      <br />
+      <input
+        type="submit"
+        value="Upload"
+        style="
+          padding: 2%;
+          background-color: white;
+          border-radius: 8px;
+          border: 1px rgb(150, 150, 150) solid;
+        "
+      />
+    </form>
+
+    {% if image_filename %}
+    <div style="text-align: left; margin-top: 40px">
+      <h5>Uploaded Image:</h5>
+      <img
+        src="{{ url_for('static', filename='images/' ~ image_filename) }}"
+        alt="Uploaded Image"
+        style="
+          margin-left: auto;
+          margin-right: auto;
+          height: auto;
+          width: 90%;
+          aspect-ratio: 1 / 1;
+          object-fit: contain;
+          padding-left: 5%;
+        "
+      />
+    </div>
+    {% endif %}
+  </div>
+
+  <div style="display: block; width: 100%">
+    <div
+      style="
+        display: block;
+        width: 100%;
+        height: 65%;
+        margin-left: 5%;
+        padding: 3%;
+        border: 0.5px rgb(210, 210, 210) solid;
+        border-radius: 25px;
+        background-color: rgb(249, 249, 249);
+        overflow-y: scroll;
+      "
+    >
+      <h2>Run Scans</h2>
+      <p>Click on each test to run and review results</p>
+
+      <div style="display: block; margin-top: 30px">
+        <form method="POST" action="" name="getScan" style="display: flex">
+          <input type="hidden" name="form_name" value="getScan" />
+          <button
+            type="submit"
+            name="scanType"
+            value="boneAge"
+            style="
+              padding: 2%;
+              background-color: white;
+              border-radius: 8px;
+              border: 1px rgb(150, 150, 150) solid;
+            "
+          >
+            Bone Age
+          </button>
+
+          {% for scan in scan_data %} {% if scan.scan_name == "Bone Age" and
+          loop.first %}
+          <p style="margin-left: 50%">Last run: {{scan.scan_datetime}}</p>
+          {% endif %} {% endfor %}
+        </form>
+      </div>
+
+      <div style="display: block; margin-top: 20px">
+        <form method="POST" action="" name="getScan" style="display: flex">
+          <input type="hidden" name="form_name" value="getScan" />
+          <button
+            type="submit"
+            name="scanType"
+            value="fracture"
+            style="
+              padding: 2%;
+              background-color: white;
+              border-radius: 8px;
+              border: 1px rgb(150, 150, 150) solid;
+            "
+          >
+            Fracture
+          </button>
+          {% for scan in scan_data %} {% if scan.scan_name == "Fracture
+          Detection" and loop.first %}
+          <p style="margin-left: 50%">Last run: {{scan.scan_datetime}}</p>
+          {% endif %} {% endfor %}
+        </form>
+      </div>
+
+      <div style="display: block; margin-top: 20px">
+        <form method="POST" action="" name="getScan" style="display: flex">
+          <input type="hidden" name="form_name" value="getScan" />
+          <button
+            type="submit"
+            name="scanType"
+            value="pneumonia"
+            style="
+              padding: 2%;
+              background-color: white;
+              border-radius: 8px;
+              border: 1px rgb(150, 150, 150) solid;
+            "
+          >
+            Pneumonia
+          </button>
+          {% for scan in scan_data %} {% if scan.scan_name == "Pneumonia
+          Detection" and loop.first %}
+          <p style="margin-left: 50%">Last run: {{scan.scan_datetime}}</p>
+          {% endif %} {% endfor %}
+        </form>
+      </div>
+
+      <div style="display: block; margin-top: 20px">
+        <form method="POST" action="" name="getScan" style="display: flex">
+          <input type="hidden" name="form_name" value="getScan" />
+          <button
+            type="submit"
+            name="scanType"
+            value="cancer"
+            style="
+              padding: 2%;
+              background-color: white;
+              border-radius: 8px;
+              border: 1px rgb(150, 150, 150) solid;
+            "
+          >
+            Cancer
+          </button>
+          {% for scan in scan_data %} {% if scan.scan_name == "Cancer Detection"
+          and loop.first %}
+          <p style="margin-left: 50%">Last run: {{scan.scan_datetime}}</p>
+          {% endif %} {% endfor %}
+        </form>
+      </div>
+    </div>
+
+    <div
+      style="
+        display: block;
+        width: 100%;
+        height: 33%;
+        margin-left: 5%;
+        margin-top: 2%;
+        padding: 3%;
+        border: 0.5px rgb(210, 210, 210) solid;
+        border-radius: 25px;
+        background-color: rgb(249, 249, 249);
+        overflow-y: scroll;
+      "
+    >
+      <h2>Results</h2>
+      {% if boneoutput_months %}
+      <p>
+        Bone age in months and years: {{ boneoutput_months }} months, {{
+        boneoutput_years }} years
+      </p>
+      <div style="display: flex; width: 100%; margin-top: 5%">
+        <!-- <label for="emailForm" style="display: flex; width: auto; margin-right: 15px; align-items: center;"></label> -->
+        <form
+          style="width: 100%; display: flex; align-items: center"
+          name="emailForm"
+          action=""
+          method="post"
+        >
+          <input type="hidden" name="form_name" value="emailForm" />
+          <textarea
+            name="note"
+            placeholder="Enter patient email address (i.e. johndoe@gmail.com)"
+            style="height: 50px; width: 80%; display: flex"
+          ></textarea>
+          <input type="submit" value="Send Scan Results" style="height: 50px;
+          display: flex; margin-left: 15px; padding: 2%; background-color:
+          white; border-radius: 8px; border: 1px rgb(150, 150, 150) solid"" />
+        </form>
+      </div>
+
+      {% elif fractureoutput_text %}
+      <p>{{ fractureoutput_text }}</p>
+      <div style="display: flex; width: 100%; margin-top: 5%">
+        <!-- <label for="emailForm" style="display: flex; width: auto; margin-right: 15px; align-items: center;"></label> -->
+        <form
+          style="width: 100%; display: flex; align-items: center"
+          name="emailForm"
+          action=""
+          method="post"
+        >
+          <input type="hidden" name="form_name" value="emailForm" />
+          <textarea
+            name="note"
+            placeholder="Enter patient email address (i.e. johndoe@gmail.com)"
+            style="height: 50px; width: 80%; display: flex"
+          ></textarea>
+          <input type="submit" value="Send Scan Results" style="height: 50px;
+          display: flex; margin-left: 15px; padding: 2%; background-color:
+          white; border-radius: 8px; border: 1px rgb(150, 150, 150) solid"" />
+        </form>
+      </div>
+
+      {% elif pneumoniaoutputtext %}
+      <p>{{ pneumoniaoutputtext }}</p>
+      <div style="display: flex; width: 100%; margin-top: 5%">
+        <!-- <label for="emailForm" style="display: flex; width: auto; margin-right: 15px; align-items: center;"></label> -->
+        <form
+          style="width: 100%; display: flex; align-items: center"
+          name="emailForm"
+          action=""
+          method="post"
+        >
+          <input type="hidden" name="form_name" value="emailForm" />
+          <textarea
+            name="note"
+            placeholder="Enter patient email address (i.e. johndoe@gmail.com)"
+            style="height: 50px; width: 80%; display: flex"
+          ></textarea>
+          <input type="submit" value="Send Scan Results" style="height: 50px;
+          display: flex; margin-left: 15px; padding: 2%; background-color:
+          white; border-radius: 8px; border: 1px rgb(150, 150, 150) solid"" />
+        </form>
+      </div>
+
+      {% elif canceroutputtext %}
+      <p>{{ canceroutputtext }}</p>
+      <div style="display: flex; width: 100%; margin-top: 5%">
+        <!-- <label for="emailForm" style="display: flex; width: auto; margin-right: 15px; align-items: center;"></label> -->
+        <form
+          style="width: 100%; display: flex; align-items: center"
+          name="emailForm"
+          action=""
+          method="post"
+        >
+          <input type="hidden" name="form_name" value="emailForm" />
+          <textarea
+            name="note"
+            placeholder="Enter patient email address (i.e. johndoe@gmail.com)"
+            style="height: 50px; width: 80%; display: flex"
+          ></textarea>
+          <input type="submit" value="Send Scan Results" style="height: 50px;
+          display: flex; margin-left: 15px; padding: 2%; background-color:
+          white; border-radius: 8px; border: 1px rgb(150, 150, 150) solid"" />
+        </form>
+      </div>
+
+      {% elif user_details %}
+      <p>
+        The latest scan results have been sent to patient {{
+        user_details.first_name }}.
+      </p>
+
+      {% else %}
+      <p>Nothing to show!</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
 <br />
 <br />
 
-<label for="getChoice">What scan do you want to run?</label>
-<form name="getChoice" action="" method="post">
-  <input type="hidden" name="form_name" value="getChoice" />
-  <select name="getChoice" id="getChoice">
-    <option value="boneAge">Bone Age</option>
-    <option value="fracture">Fracture Detection</option>
-    <option value="pneumonia">Pneumonia Detection</option>
-    <option value="cancer">Cancer Detection</option>
-  </select>
-  <input type="submit" value="Submit" />
-</form>
-<br />
-<br />
-<br />
 <h2>Doctor's Scan Records</h2>
-<table border="1">
+<table
+  style="
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    border: 0.5px solid rgb(238, 7, 7);
+  "
+>
   <thead>
-    <tr>
-      <th>Patient Name</th>
-      <th>Patient Email</th>
-      <th>Scan Name</th>
-      <th>Scan Date and Time</th>
-      <th>Scan Results</th>
+    <tr style="background-color: rgb(249, 249, 249)">
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Patient Name
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Patient Email
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Name
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Date and Time
+      </th>
+      <th
+        style="
+          padding: 10px;
+          border: 0.5px solid rgb(130, 130, 130);
+          text-align: left;
+        "
+      >
+        Scan Results
+      </th>
     </tr>
   </thead>
   <tbody>
     {% if scan_data %} {% for scan in scan_data %}
     <tr>
-      <td>{{ scan.patient_name }}</td>
-      <td>{{ scan.patient_email }}</td>
-      <td>{{ scan.scan_name }}</td>
-      <td>{{ scan.scan_datetime }}</td>
-      <td>{{ scan.scan_result }}</td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.patient_name }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.patient_email }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_name }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_datetime }}
+      </td>
+      <td style="padding: 10px; border: 0.5px solid rgb(210, 210, 210)">
+        {{ scan.scan_result }}
+      </td>
     </tr>
     {% endfor %} {% else %}
     <tr>
-      <td colspan="5">
+      <td
+        colspan="5"
+        style="padding: 20px; text-align: center; color: rgb(150, 150, 150)"
+      >
         No scans available or scan in progress. Please click on the Home page.
       </td>
     </tr>
     {% endif %}
   </tbody>
 </table>
-{% if boneoutput_months %}
-<h2 align="center">Scan Output:</h2>
-<p align="center">
-  Your bone age is: {{ boneoutput_months }} months (also {{ boneoutput_years}}
-  years)
-</p>
-{% endif %} {% if fractureoutput_text %}
-<h2 align="center">Scan Output:</h2>
-<p align="center">Here is information on your fracture scan:</p>
-<p align="center">{{fractureoutput_text}}</p>
-{% endif %} {% if pneumoniaoutputtext %}
-<h2 align="center">Scan Output:</h2>
-<p align="center">{{pneumoniaoutputtext}}</p>
-{% endif %} {% if canceroutputtext %}
-<h2 align="center">Scan Output:</h2>
-<p align="center">{{canceroutputtext}}</p>
-{% endif %}
 
-<br />
-<label for="emailForm"
-  >Email your patient the results of the latest scan:</label
->
-<form name="emailForm" action="" method="post">
-  <input type="hidden" name="form_name" value="emailForm" />
-  <!-- Hidden field for form identification -->
-  <textarea
-    name="note"
-    placeholder="Start of your email..."
-    style="width: 100%"
-  ></textarea>
-  <input
-    type="submit"
-    value="Submit Email"
-    style="margin-top: 10px; display: block"
-  />
-</form>
-{% if user_details %}
-<p align="center">
-  The name of the patient with this email is: {{ user_details.first_name }}.
-  Please verify that this is indeed correct. The scan results have been sent to
-  this patient.
-</p>
-
-{% endif %} {% else %}
+{% else %}
 <h1 align="center" class="pageTitle">Welcome {{user.first_name}}</h1>
 <hr style="border-width: 2px" />
 <h2 align="center">Educational Videos:</h2>
@@ -240,7 +549,6 @@
 <br />
 <br />
 <hr style="border-width: 2px" />
-
 <h2 align="center">Frequently Asked Questions</h2>
 <ul style="list-style-type: none; list-style-position: outside">
   <li style="padding-bottom: 10px">
