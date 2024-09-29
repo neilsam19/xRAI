@@ -17,14 +17,14 @@ with session.begin():
     for table in meta.sorted_tables:
         print(f"Table: {table.name}")
         
-        # Select all rows from the table
-        select_stmt = table.select()
-        result = session.execute(select_stmt)
+        # # Select all rows from the table
+        # select_stmt = table.select()
+        # result = session.execute(select_stmt)
 
-        # Print out each row
-        for row in result:
-            print(row)
-        #session.execute(table.delete())
+        # # Print out each row
+        # for row in result:
+        #     print(row)
+        session.execute(table.delete())
 
 session.commit()
 
