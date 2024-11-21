@@ -11,7 +11,7 @@ By Harsit Mittal, Neil Samant, Preetam Jukalkar
 ## Devpost
 Here's our [Devpost](https://devpost.com/software/xrai-qbj1xt) submission and also our [YouTube](https://youtu.be/vaZwQ-sLcaE) video.
 
-### Main Ackowledgements
+### Main Acknowledgements
 
 https://github.com/techwithtim/Flask-Web-App-Tutorial - to create the Flask template
 
